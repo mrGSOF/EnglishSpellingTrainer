@@ -1,3 +1,6 @@
+### Cute English exercise software to train kids and teach procedural programming.
+### By: Guy Soffer (GSOF) 2019
+
 import os, random
 try:
     import winsound
@@ -12,11 +15,11 @@ except:
         raise ("No sound support\nPlease <pip install playsound>\nand retry\n")
             
 
-def Dice(Min=1, Max=7) -> int:
-    x = int(random.uniform(Min, Max))
+def Dice(Min=1, Max=6) -> int:
+    x = int(random.randint(Min, Max))
     return int(x)
 
-def Dice_Exclude(Min=1, Max=7, ExList=[]) -> int:
+def Dice_Exclude(Min=1, Max=6, ExList=[]) -> int:
     again = True
     while again==True:
         again = False
@@ -27,9 +30,10 @@ def Dice_Exclude(Min=1, Max=7, ExList=[]) -> int:
     return int(x)
 
 def getListOfDecoyWords(wordList, excludeWord) -> list:
-    x1 = Dice_Exclude(0, len(wordList), ExList=[excludeWord])
-    x2 = Dice_Exclude(0, len(wordList), ExList=[excludeWord, x1])
-    x3 = Dice_Exclude(0, len(wordList), ExList=[excludeWord, x1, x2])
+    N = len(wordList) -1
+    x1 = Dice_Exclude(0, N, ExList=[excludeWord])
+    x2 = Dice_Exclude(0, N, ExList=[excludeWord, x1])
+    x3 = Dice_Exclude(0, N, ExList=[excludeWord, x1, x2])
     options = [excludeWord, x1,x2,x3]
     options.sort()
     return options
@@ -55,6 +59,24 @@ word_path = './Words/'
 sound_path = './Sounds/'
 word_list = os.listdir(word_path)
 
+try:
+    import pysole
+    ps = True
+except:
+    ps = False
+    print("****************************************************")
+    print("* For better visuals use <pip install liveconsole> *")
+    print("****************************************************")
+
+if ps:
+    ### For better visuals
+    pysole.probe(runRemainingCode=True,
+                 printStartupCode=False,
+                 primaryPrompt='eng>> ',
+                 font='Consolas',
+                 fontSize=20,
+                 )
+
 again = True
 while again == True:
     level = input('Choose difficulty level (A,B,C): ')
@@ -74,7 +96,7 @@ while again == True:
         print('\n')
 
 while words > 0:
-    word_number = Dice(0, len(word_list)) #< Randomly choose a new word 
+    word_number = Dice(0, len(word_list)-1) #< Randomly choose a new word 
     if level == 'a':
         ### Print list of options
         options = getListOfDecoyWords(word_list, word_number)
